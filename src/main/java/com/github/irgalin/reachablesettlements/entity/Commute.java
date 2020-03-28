@@ -1,21 +1,31 @@
 package com.github.irgalin.reachablesettlements.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Commute {
 
-    private Settlement destinationSettlement;
+    private String destPoint;
 
-    private int timeToCommute;
+    private int time;
 
-    public Commute(Settlement destinationSettlement, int timeToCommute) {
-        this.destinationSettlement = destinationSettlement;
-        this.timeToCommute = timeToCommute;
+    public Commute(@JsonProperty("destPoint") String destPoint, @JsonProperty("time") int time) {
+        this.destPoint = destPoint;
+        this.time = time;
     }
 
-    public Settlement getDestinationSettlement() {
-        return destinationSettlement;
+    public String getDestPoint() {
+        return destPoint;
     }
 
-    public int getTimeToCommute() {
-        return timeToCommute;
+    public void setDestPoint(String destPoint) {
+        this.destPoint = destPoint;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
     }
 }

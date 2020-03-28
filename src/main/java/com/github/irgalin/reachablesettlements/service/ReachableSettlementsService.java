@@ -1,11 +1,11 @@
 package com.github.irgalin.reachablesettlements.service;
 
-import com.github.irgalin.reachablesettlements.entity.Settlement;
-
-import java.util.List;
+import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 public interface ReachableSettlementsService {
 
-    List<Settlement> getListOfReachableSettlements(String startingPoint, int commuteTime);
+    @NotNull
+    Set<String> getListOfReachableSettlements(@NotNull String startingPoint, int commuteTime);
 
 }

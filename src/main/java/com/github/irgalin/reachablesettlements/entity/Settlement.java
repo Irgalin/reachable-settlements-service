@@ -1,31 +1,33 @@
 package com.github.irgalin.reachablesettlements.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public class Settlement {
 
-    private long id;
-
     private String name;
 
-    private List<Commute> commuteList;
+    private List<Commute> commutes;
 
-    public Settlement(long id, String name, List<Commute> commuteList) {
-        this.id = id;
+    public Settlement(@JsonProperty("name") String name, @JsonProperty("commutes") List<Commute> commutes) {
         this.name = name;
-        this.commuteList = commuteList;
-    }
-
-    public long getId() {
-        return id;
+        this.commutes = commutes;
     }
 
     public String getName() {
         return name;
     }
 
-    public List<Commute> getCommuteList() {
-        return commuteList;
+    public void setName(String name) {
+        this.name = name;
     }
 
+    public List<Commute> getCommutes() {
+        return commutes;
+    }
+
+    public void setCommutes(List<Commute> commutes) {
+        this.commutes = commutes;
+    }
 }
