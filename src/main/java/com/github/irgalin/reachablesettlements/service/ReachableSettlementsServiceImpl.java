@@ -1,71 +1,67 @@
 package com.github.irgalin.reachablesettlements.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.irgalin.reachablesettlements.cache.ReachableSettlementsCache;
 import com.github.irgalin.reachablesettlements.entity.Commute;
 import com.github.irgalin.reachablesettlements.entity.Settlement;
+import com.github.irgalin.reachablesettlements.storage.SettlementsStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
 import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotNull;
-import java.io.File;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class ReachableSettlementsServiceImpl implements ReachableSettlementsService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReachableSettlementsServiceImpl.class);
+
     @Value("${jsonDataFile}")
     private String jsonDataFile;
 
-    private Map<String, Settlement> settlementMap = new ConcurrentHashMap<>();
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReachableSettlementsServiceImpl.class);
-
     @PostConstruct
-    public void readDataFromFile() {
-        try {
-            File jsonData = ResourceUtils.getFile(jsonDataFile);
-            if (jsonData.isFile()) {
-                ObjectMapper mapper = new ObjectMapper();
-                Settlement[] settlements = mapper.readValue(jsonData, Settlement[].class);
-                for (Settlement settlement : settlements) {
-                    settlementMap.put(settlement.getName(), settlement);
-                }
-            }
-        } catch (Exception e) {
-            LOGGER.error("Failed to parse data file!", e);
+    public void prepareStorage() {
+        if (!SettlementsStorage.hasData()) {
+            SettlementsStorage.readDataFromJsonFile(jsonDataFile);
         }
-
     }
 
     @Override
     @NotNull
-    public Set<String> getListOfReachableSettlements(@NotNull final String startingPointName, final int commuteTime) {
-        Set<String> reachableSettlementNames = new LinkedHashSet<>();
+    public Set<String> getReachableSettlements(@NotNull final String startingPointName, final int commuteTime) {
+        Set<String> result = ReachableSettlementsCache.getResultFromCache(startingPointName, commuteTime);
+        if (result == null) {
+            result = findReachableSettlements(startingPointName, commuteTime);
+        }
+        ReachableSettlementsCache.putResultInCache(startingPointName, commuteTime, result);
+        return result;
+    }
+
+    private synchronized Set<String> findReachableSettlements(@NotNull final String startingPointName,
+                                                              final int commuteTime) {
+        Set<String> foundSettlementsNames = new LinkedHashSet<>();
         Stack<SettlementWrapper> settlementStack = new Stack<>();
-        settlementStack.push(new SettlementWrapper(settlementMap.get(startingPointName), 0));
+        settlementStack.push(new SettlementWrapper(SettlementsStorage.getSettlementByName(startingPointName), 0));
         while (!settlementStack.empty()) {
             SettlementWrapper currentSettlement = settlementStack.pop();
             int curSettlementCommuteTime = currentSettlement.getCommuteTimeToStartingPoint();
             for (Commute commute : currentSettlement.getSettlement().getCommutes()) {
-                Settlement neighborSettlement = settlementMap.get(commute.getDestPoint());
+                Settlement neighborSettlement = SettlementsStorage.getSettlementByName(commute.getDestPoint());
                 String neighborSettlementName = neighborSettlement.getName();
-                if (reachableSettlementNames.contains(neighborSettlementName) ||
+                if (foundSettlementsNames.contains(neighborSettlementName) ||
                         startingPointName.equals(neighborSettlementName)) {
                     continue;
                 }
                 int neighborSettlementCommuteTime = curSettlementCommuteTime + commute.getTime();
                 if (neighborSettlementCommuteTime <= commuteTime) {
-                    reachableSettlementNames.add(neighborSettlementName);
+                    foundSettlementsNames.add(neighborSettlementName);
                     settlementStack.push(new SettlementWrapper(neighborSettlement, neighborSettlementCommuteTime));
                 }
             }
         }
-        return reachableSettlementNames;
+        return foundSettlementsNames;
     }
 
     private class SettlementWrapper {

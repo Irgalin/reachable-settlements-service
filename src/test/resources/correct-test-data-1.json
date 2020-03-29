@@ -1,0 +1,41 @@
+[
+  {
+    "name": "city1",
+    "commutes": [
+      {
+        "destPoint": "city2",
+        "time": 20
+      },
+      {
+        "destPoint": "city3",
+        "time": 20
+      }
+    ]
+  },
+  {
+    "name": "city2",
+    "commutes": [
+      {
+        "destPoint": "city1",
+        "time": 20
+      },
+      {
+        "destPoint": "city3",
+        "time": 30
+      }
+    ]
+  },
+  {
+    "name": "city3",
+    "commutes": [
+      {
+        "destPoint": "city1",
+        "time": 20
+      },
+      {
+        "destPoint": "city2",
+        "time": 30
+      }
+    ]
+  }
+]

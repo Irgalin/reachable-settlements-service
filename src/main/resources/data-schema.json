@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "array",
+  "minItems": 2,
+  "items": {
+    "description": "The unique identifier for a product",
+    "type": "object",
+    "properties": {
+      "name": {
+        "description": "The unique identifier for a product",
+        "type": "string"
+      },
+      "commutes": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "description": "The unique identifier for a product",
+          "type": "object",
+          "properties": {
+            "destPoint": {
+              "description": "The unique identifier for a product",
+              "type": "string"
+            },
+            "time": {
+              "description": "Time to commute to destination point in minutes",
+              "type": "number",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "destPoint",
+            "time"
+          ]
+        }
+      }
+    },
+    "required": [
+      "name",
+      "commutes"
+    ]
+  }
+}

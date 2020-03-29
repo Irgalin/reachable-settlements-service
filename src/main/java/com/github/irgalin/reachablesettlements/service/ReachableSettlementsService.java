@@ -6,6 +6,6 @@ import java.util.Set;
 public interface ReachableSettlementsService {
 
     @NotNull
-    Set<String> getListOfReachableSettlements(@NotNull String startingPoint, int commuteTime);
+    Set<String> getReachableSettlements(@NotNull String startingPoint, int commuteTime);
 
 }

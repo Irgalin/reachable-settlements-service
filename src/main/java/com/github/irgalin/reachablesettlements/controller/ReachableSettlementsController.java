@@ -15,8 +15,9 @@ public class ReachableSettlementsController {
     private ReachableSettlementsService reachableSettlementsService;
 
 
-    @GetMapping("/reachablesettlements")
-    public Set<String> getListOfReachableSettlements(@RequestParam(value = "startingPoint") String startingPoint, @RequestParam(value = "commuteTime") int commuteTime) {
-        return reachableSettlementsService.getListOfReachableSettlements(startingPoint, commuteTime);
+    @GetMapping("/reachable/settlements")
+    public Set<String> getListOfReachableSettlements(@RequestParam(value = "startingPoint") String startingPoint,
+                                                     @RequestParam(value = "commuteTime") int commuteTime) {
+        return reachableSettlementsService.getReachableSettlements(startingPoint, commuteTime);
     }
 }

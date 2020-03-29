@@ -1,0 +1,16 @@
+[
+  {
+    "name": "city1",
+    "commutes": [
+    ]
+  },
+  {
+    "name": "city2",
+    "commutes": [
+      {
+        "destPoint": "city1",
+        "time": 20
+      }
+    ]
+  }
+]
