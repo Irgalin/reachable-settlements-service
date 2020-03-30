@@ -28,10 +28,10 @@ public class SettlementsStorageTest {
         SettlementsStorage.readDataFromJsonFile("classpath:correct-test-data-1.json");
         assertThat(SettlementsStorage.hasData()).isTrue();
         assertThat(SettlementsStorage.settlementsCount()).isEqualTo(3);
-        assertThat(SettlementsStorage.getSettlementByName("city3"))
+        assertThat(SettlementsStorage.getSettlementByName("town3"))
                 .isNotNull()
                 .isInstanceOf(Settlement.class);
-        assertThat(SettlementsStorage.getSettlementByName("city3").getCommutes())
+        assertThat(SettlementsStorage.getSettlementByName("town3").getCommutes())
                 .isNotNull()
                 .hasSize(2);
     }

@@ -11,12 +11,15 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.Stack;
 
 @Service
-public class ReachableSettlementsServiceImpl implements ReachableSettlementsService {
+public class SettlementsServiceImpl implements SettlementsService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReachableSettlementsServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SettlementsServiceImpl.class);
 
     @Value("${jsonDataFile}")
     private String jsonDataFile;
@@ -31,6 +34,9 @@ public class ReachableSettlementsServiceImpl implements ReachableSettlementsServ
     @Override
     @NotNull
     public Set<String> getReachableSettlements(@NotNull final String startingPointName, final int commuteTime) {
+        if (SettlementsStorage.getSettlementByName(startingPointName) == null) {
+            throw new SettlementsServiceException("Unknown settlement name: " + startingPointName);
+        }
         Set<String> result = ReachableSettlementsCache.getResultFromCache(startingPointName, commuteTime);
         if (result == null) {
             result = findReachableSettlements(startingPointName, commuteTime);

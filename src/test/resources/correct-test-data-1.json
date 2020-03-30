@@ -1,39 +1,39 @@
 [
   {
-    "name": "city1",
+    "name": "town1",
     "commutes": [
       {
-        "destPoint": "city2",
+        "destPoint": "town2",
         "time": 20
       },
       {
-        "destPoint": "city3",
+        "destPoint": "town3",
         "time": 20
       }
     ]
   },
   {
-    "name": "city2",
+    "name": "town2",
     "commutes": [
       {
-        "destPoint": "city1",
+        "destPoint": "town1",
         "time": 20
       },
       {
-        "destPoint": "city3",
+        "destPoint": "town3",
         "time": 30
       }
     ]
   },
   {
-    "name": "city3",
+    "name": "town3",
     "commutes": [
       {
-        "destPoint": "city1",
+        "destPoint": "town1",
         "time": 20
       },
       {
-        "destPoint": "city2",
+        "destPoint": "town2",
         "time": 30
       }
     ]

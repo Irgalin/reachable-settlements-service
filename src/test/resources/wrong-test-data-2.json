@@ -1,14 +1,14 @@
 [
   {
-    "name": "city1",
+    "name": "town1",
     "commutes": [
     ]
   },
   {
-    "name": "city2",
+    "name": "town2",
     "commutes": [
       {
-        "destPoint": "city1",
+        "destPoint": "town1",
         "time": 20
       }
     ]
