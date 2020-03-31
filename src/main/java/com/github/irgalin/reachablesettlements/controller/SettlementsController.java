@@ -23,9 +23,9 @@ public class SettlementsController {
 
 
     @GetMapping("/reachable-settlements")
-    public Set<String> getReachableSettlements(@RequestParam(value = "startingPoint") @NotBlank String startingPoint,
+    public Set<String> getReachableSettlements(@RequestParam(value = "startingPointName") @NotBlank String startingPointName,
                                                @RequestParam(value = "commuteTimeMin") @Min(1) int commuteTimeMin) throws SettlementsServiceException {
-        return settlementsService.getReachableSettlements(startingPoint, commuteTimeMin);
+        return settlementsService.getReachableSettlements(startingPointName, commuteTimeMin);
 
     }
 }

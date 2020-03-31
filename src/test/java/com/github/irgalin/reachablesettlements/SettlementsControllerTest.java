@@ -38,7 +38,7 @@ public class SettlementsControllerTest {
         Set<String> serviceResult = new HashSet<>(Arrays.asList("town2", "town3"));
         given(settlementsService.getReachableSettlements("town1", 40)).willReturn(serviceResult);
         mockMvc.perform(get("/reachable-settlements")
-                .param("startingPoint", "town1")
+                .param("startingPointName", "town1")
                 .param("commuteTimeMin", "40")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -52,7 +52,7 @@ public class SettlementsControllerTest {
         given(settlementsService.getReachableSettlements("town2", 30))
                 .willThrow(new SettlementsServiceException("exception message"));
         mockMvc.perform(get("/reachable-settlements")
-                .param("startingPoint", "town2")
+                .param("startingPointName", "town2")
                 .param("commuteTimeMin", "30")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())

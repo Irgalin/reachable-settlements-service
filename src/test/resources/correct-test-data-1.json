@@ -3,11 +3,11 @@
     "name": "town1",
     "commutes": [
       {
-        "destPoint": "town2",
+        "destPointName": "town2",
         "time": 20
       },
       {
-        "destPoint": "town3",
+        "destPointName": "town3",
         "time": 20
       }
     ]
@@ -16,11 +16,11 @@
     "name": "town2",
     "commutes": [
       {
-        "destPoint": "town1",
+        "destPointName": "town1",
         "time": 20
       },
       {
-        "destPoint": "town3",
+        "destPointName": "town3",
         "time": 30
       }
     ]
@@ -29,11 +29,11 @@
     "name": "town3",
     "commutes": [
       {
-        "destPoint": "town1",
+        "destPointName": "town1",
         "time": 20
       },
       {
-        "destPoint": "town2",
+        "destPointName": "town2",
         "time": 30
       }
     ]

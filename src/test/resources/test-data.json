@@ -3,15 +3,15 @@
     "name": "town1",
     "commutes": [
       {
-        "destPoint": "town2",
+        "destPointName": "town2",
         "time": 20
       },
       {
-        "destPoint": "town3",
+        "destPointName": "town3",
         "time": 20
       },
       {
-        "destPoint": "town4",
+        "destPointName": "town4",
         "time": 30
       }
     ]
@@ -20,15 +20,15 @@
     "name": "town2",
     "commutes": [
       {
-        "destPoint": "town3",
+        "destPointName": "town3",
         "time": 20
       },
       {
-        "destPoint": "town4",
+        "destPointName": "town4",
         "time": 20
       },
       {
-        "destPoint": "town5",
+        "destPointName": "town5",
         "time": 40
       }
     ]
@@ -37,15 +37,15 @@
     "name": "town3",
     "commutes": [
       {
-        "destPoint": "town1",
+        "destPointName": "town1",
         "time": 20
       },
       {
-        "destPoint": "town2",
+        "destPointName": "town2",
         "time": 20
       },
       {
-        "destPoint": "town4",
+        "destPointName": "town4",
         "time": 15
       }
     ]
@@ -54,19 +54,19 @@
     "name": "town4",
     "commutes": [
       {
-        "destPoint": "town1",
+        "destPointName": "town1",
         "time": 30
       },
       {
-        "destPoint": "town2",
+        "destPointName": "town2",
         "time": 20
       },
       {
-        "destPoint": "town3",
+        "destPointName": "town3",
         "time": 15
       },
       {
-        "destPoint": "town5",
+        "destPointName": "town5",
         "time": 15
       }
     ]
@@ -75,11 +75,11 @@
     "name": "town5",
     "commutes": [
       {
-        "destPoint": "town2",
+        "destPointName": "town2",
         "time": 40
       },
       {
-        "destPoint": "town4",
+        "destPointName": "town4",
         "time": 15
       }
     ]

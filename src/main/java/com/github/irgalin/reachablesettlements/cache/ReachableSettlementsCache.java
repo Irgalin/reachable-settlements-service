@@ -1,11 +1,16 @@
 package com.github.irgalin.reachablesettlements.cache;
 
+import com.github.irgalin.reachablesettlements.service.SettlementsService;
+
 import javax.validation.constraints.NotNull;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * The cache that stores results of {@link SettlementsService#getReachableSettlements(String, int)} operation.
+ */
 public class ReachableSettlementsCache {
 
     private final static Map<ResultCacheKey, Set<String>> resultsCache = new ConcurrentHashMap<>();

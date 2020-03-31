@@ -8,7 +8,7 @@
     "name": "town2",
     "commutes": [
       {
-        "destPoint": "town1",
+        "destPointName": "town1",
         "time": 20
       }
     ]

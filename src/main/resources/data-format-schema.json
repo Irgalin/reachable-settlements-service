@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "JSON Schema that defines input data format that can be read by service.",
+  "type": "array",
+  "minItems": 2,
+  "items": {
+    "description": "Represents any type of human settlement (city, town, village, etc.) and possible direct commutes from it.",
+    "type": "object",
+    "properties": {
+      "name": {
+        "description": "The settlement name, must be unique and certain, for example: 'Saint Petersburg, Russia', 'Saint Petersburg, Florida, USA'.",
+        "type": "string"
+      },
+      "commutes": {
+        "type": "array",
+        "minItems": 1,
+        "description": "List of possible direct commutes from this settlement.",
+        "items": {
+          "description": "Represents commute time to specific settlement.",
+          "type": "object",
+          "properties": {
+            "destPointName": {
+              "description": "The name of destination point (must match to the existing settlement name).",
+              "type": "string"
+            },
+            "time": {
+              "description": "Time to commute to destination point in minutes.",
+              "type": "number",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "destPointName",
+            "time"
+          ]
+        }
+      }
+    },
+    "required": [
+      "name",
+      "commutes"
+    ]
+  }
+}

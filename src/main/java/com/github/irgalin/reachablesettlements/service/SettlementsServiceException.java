@@ -5,4 +5,5 @@ public class SettlementsServiceException extends RuntimeException {
     public SettlementsServiceException(String message) {
         super(message);
     }
+
 }

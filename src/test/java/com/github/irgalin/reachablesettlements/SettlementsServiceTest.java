@@ -23,7 +23,7 @@ public class SettlementsServiceTest {
     static class ReachableSettlementsServiceImplTestContextConfiguration {
 
         @Bean
-        public SettlementsService employeeService() {
+        public SettlementsService settlementsService() {
             return new SettlementsServiceImpl();
         }
     }

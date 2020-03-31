@@ -4,8 +4,6 @@ import com.github.irgalin.reachablesettlements.cache.ReachableSettlementsCache;
 import com.github.irgalin.reachablesettlements.entity.Commute;
 import com.github.irgalin.reachablesettlements.entity.Settlement;
 import com.github.irgalin.reachablesettlements.storage.SettlementsStorage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +17,6 @@ import java.util.Stack;
 @Service
 public class SettlementsServiceImpl implements SettlementsService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SettlementsServiceImpl.class);
-
     @Value("${jsonDataFile}")
     private String jsonDataFile;
 
@@ -33,20 +29,20 @@ public class SettlementsServiceImpl implements SettlementsService {
 
     @Override
     @NotNull
-    public Set<String> getReachableSettlements(@NotNull final String startingPointName, final int commuteTime) {
+    public Set<String> getReachableSettlements(@NotNull final String startingPointName, final int commuteTimeLimit) {
         if (SettlementsStorage.getSettlementByName(startingPointName) == null) {
             throw new SettlementsServiceException("Unknown settlement name: " + startingPointName);
         }
-        Set<String> result = ReachableSettlementsCache.getResultFromCache(startingPointName, commuteTime);
+        Set<String> result = ReachableSettlementsCache.getResultFromCache(startingPointName, commuteTimeLimit);
         if (result == null) {
-            result = findReachableSettlements(startingPointName, commuteTime);
+            result = findReachableSettlements(startingPointName, commuteTimeLimit);
         }
-        ReachableSettlementsCache.putResultInCache(startingPointName, commuteTime, result);
+        ReachableSettlementsCache.putResultInCache(startingPointName, commuteTimeLimit, result);
         return result;
     }
 
     private synchronized Set<String> findReachableSettlements(@NotNull final String startingPointName,
-                                                              final int commuteTime) {
+                                                              final int commuteTimeLimit) {
         Set<String> foundSettlementsNames = new LinkedHashSet<>();
         Stack<SettlementWrapper> settlementStack = new Stack<>();
         settlementStack.push(new SettlementWrapper(SettlementsStorage.getSettlementByName(startingPointName), 0));
@@ -54,14 +50,14 @@ public class SettlementsServiceImpl implements SettlementsService {
             SettlementWrapper currentSettlement = settlementStack.pop();
             int curSettlementCommuteTime = currentSettlement.getCommuteTimeToStartingPoint();
             for (Commute commute : currentSettlement.getSettlement().getCommutes()) {
-                Settlement neighborSettlement = SettlementsStorage.getSettlementByName(commute.getDestPoint());
+                Settlement neighborSettlement = SettlementsStorage.getSettlementByName(commute.getDestPointName());
                 String neighborSettlementName = neighborSettlement.getName();
                 if (foundSettlementsNames.contains(neighborSettlementName) ||
                         startingPointName.equals(neighborSettlementName)) {
                     continue;
                 }
                 int neighborSettlementCommuteTime = curSettlementCommuteTime + commute.getTime();
-                if (neighborSettlementCommuteTime <= commuteTime) {
+                if (neighborSettlementCommuteTime <= commuteTimeLimit) {
                     foundSettlementsNames.add(neighborSettlementName);
                     settlementStack.push(new SettlementWrapper(neighborSettlement, neighborSettlementCommuteTime));
                 }
