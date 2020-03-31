@@ -4,6 +4,7 @@ import com.github.irgalin.reachablesettlements.cache.ReachableSettlementsCache;
 import com.github.irgalin.reachablesettlements.entity.Commute;
 import com.github.irgalin.reachablesettlements.entity.Settlement;
 import com.github.irgalin.reachablesettlements.storage.SettlementsStorage;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,9 @@ import java.util.Stack;
 @Service
 public class SettlementsServiceImpl implements SettlementsService {
 
-    @Value("${jsonDataFile}")
+    private final static Logger LOGGER = Logger.getLogger(SettlementsServiceImpl.class);
+
+    @Value("${json.data.file}")
     private String jsonDataFile;
 
     @PostConstruct
@@ -51,6 +54,11 @@ public class SettlementsServiceImpl implements SettlementsService {
             int curSettlementCommuteTime = currentSettlement.getCommuteTimeToStartingPoint();
             for (Commute commute : currentSettlement.getSettlement().getCommutes()) {
                 Settlement neighborSettlement = SettlementsStorage.getSettlementByName(commute.getDestPointName());
+                if (neighborSettlement == null) {
+                    LOGGER.warn("The following destination point is absent: " + commute.getDestPointName() +
+                ". Please check correctness of input data.");
+                    continue;
+                }
                 String neighborSettlementName = neighborSettlement.getName();
                 if (foundSettlementsNames.contains(neighborSettlementName) ||
                         startingPointName.equals(neighborSettlementName)) {

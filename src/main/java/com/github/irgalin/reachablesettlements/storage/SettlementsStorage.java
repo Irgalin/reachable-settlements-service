@@ -9,6 +9,8 @@ import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.github.irgalin.reachablesettlements.entity.Settlement;
 import org.apache.log4j.Logger;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.util.ResourceUtils;
 
 import javax.validation.constraints.NotNull;
@@ -53,8 +55,9 @@ public class SettlementsStorage {
     }
 
     private static boolean isJsonDataValid(@NotNull JsonNode jsonNode) throws IOException, ProcessingException {
+        Resource schemaResource = new ClassPathResource("data-format-schema.json");
         JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
-        JsonSchema schema = factory.getJsonSchema(JsonLoader.fromFile(ResourceUtils.getFile("classpath:data-format-schema.json")));
+        JsonSchema schema = factory.getJsonSchema(JsonLoader.fromURL(schemaResource.getURL()));
         ProcessingReport report = schema.validate(jsonNode);
         if (!report.isSuccess()) {
             LOGGER.error("The data in JSON file doesn't match to the defined schema. Report:\n" + report);

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "description": "JSON Schema that defines input data format that can be read by service.",
+  "description": "JSON Schema that defines input data format that can be read by service Reachable Settlements Service.",
   "type": "array",
   "minItems": 2,
   "items": {
@@ -26,7 +26,8 @@
             "time": {
               "description": "Time to commute to destination point in minutes.",
               "type": "number",
-              "minimum": 1
+              "minimum": 1,
+              "maximum": 2147483647
             }
           },
           "required": [
