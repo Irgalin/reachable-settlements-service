@@ -2,6 +2,7 @@ package com.github.irgalin.reachablesettlements;
 
 
 import com.github.irgalin.reachablesettlements.service.SettlementsService;
+import com.github.irgalin.reachablesettlements.service.SettlementsServiceException;
 import com.github.irgalin.reachablesettlements.service.SettlementsServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 @TestPropertySource(locations = "/test-application.properties")
@@ -47,6 +49,12 @@ public class SettlementsServiceTest {
         Set<String> result4 = settlementsService.getReachableSettlements("town5", 999999999);
         assertThat(result4).isNotNull().isNotEmpty();
         assertThat(result4).containsExactlyInAnyOrder("town1", "town2", "town3", "town4");
+    }
+
+    @Test
+    public void testGetListOfReachableSettlementsWrongInputParameters() {
+        assertThrows(SettlementsServiceException.class,
+                () -> settlementsService.getReachableSettlements("some_town", 10));
     }
 
 }

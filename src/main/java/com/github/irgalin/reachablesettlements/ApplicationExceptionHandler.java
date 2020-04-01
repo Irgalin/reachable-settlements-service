@@ -2,7 +2,10 @@ package com.github.irgalin.reachablesettlements;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.irgalin.reachablesettlements.service.SettlementsServiceException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -21,6 +24,16 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
         errorResponse.setMessage(serviceExc.getMessage());
         return ResponseEntity.badRequest().body(errorResponse);
 
+    }
+
+    @Override
+    public ResponseEntity<Object> handleMethodArgumentNotValid(@NotNull MethodArgumentNotValidException ex,
+                                                               HttpHeaders headers, HttpStatus status,
+                                                               WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setTimestamp(LocalDateTime.now());
+        errorResponse.setMessage(ex.getMessage());
+        return ResponseEntity.badRequest().body(errorResponse);
     }
 
     private class ErrorResponse {

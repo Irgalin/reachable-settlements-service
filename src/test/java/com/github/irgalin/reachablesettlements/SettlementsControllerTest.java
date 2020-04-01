@@ -19,7 +19,7 @@ import java.util.Set;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,9 +37,8 @@ public class SettlementsControllerTest {
     public void testGetReachableSettlementsWithCorrectParameters() throws Exception {
         Set<String> serviceResult = new HashSet<>(Arrays.asList("town2", "town3"));
         given(settlementsService.getReachableSettlements("town1", 40)).willReturn(serviceResult);
-        mockMvc.perform(get("/reachable-settlements")
-                .param("startingPointName", "town1")
-                .param("commuteTimeMin", "40")
+        mockMvc.perform(post("/reachable-settlements")
+                .content("{\"startingPointName\":\"town1\",\"commuteTimeMin\":40}")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -51,9 +50,8 @@ public class SettlementsControllerTest {
     public void testGetReachableSettlementsWhenServiceThrowsException() throws Exception {
         given(settlementsService.getReachableSettlements("town2", 30))
                 .willThrow(new SettlementsServiceException("exception message"));
-        mockMvc.perform(get("/reachable-settlements")
-                .param("startingPointName", "town2")
-                .param("commuteTimeMin", "30")
+        mockMvc.perform(post("/reachable-settlements")
+                .content("{\"startingPointName\":\"town2\",\"commuteTimeMin\":30}")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", is("exception message")));

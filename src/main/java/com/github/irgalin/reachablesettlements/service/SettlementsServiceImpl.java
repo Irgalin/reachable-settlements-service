@@ -1,6 +1,5 @@
 package com.github.irgalin.reachablesettlements.service;
 
-import com.github.irgalin.reachablesettlements.cache.ReachableSettlementsCache;
 import com.github.irgalin.reachablesettlements.entity.Commute;
 import com.github.irgalin.reachablesettlements.entity.Settlement;
 import com.github.irgalin.reachablesettlements.storage.SettlementsStorage;
@@ -36,12 +35,7 @@ public class SettlementsServiceImpl implements SettlementsService {
         if (SettlementsStorage.getSettlementByName(startingPointName) == null) {
             throw new SettlementsServiceException("Unknown settlement name: " + startingPointName);
         }
-        Set<String> result = ReachableSettlementsCache.getResultFromCache(startingPointName, commuteTimeLimit);
-        if (result == null) {
-            result = findReachableSettlements(startingPointName, commuteTimeLimit);
-        }
-        ReachableSettlementsCache.putResultInCache(startingPointName, commuteTimeLimit, result);
-        return result;
+        return findReachableSettlements(startingPointName, commuteTimeLimit);
     }
 
     private synchronized Set<String> findReachableSettlements(@NotNull final String startingPointName,
@@ -56,7 +50,7 @@ public class SettlementsServiceImpl implements SettlementsService {
                 Settlement neighborSettlement = SettlementsStorage.getSettlementByName(commute.getDestPointName());
                 if (neighborSettlement == null) {
                     LOGGER.warn("The following destination point is absent: " + commute.getDestPointName() +
-                ". Please check correctness of input data.");
+                            ". Please check correctness of input data.");
                     continue;
                 }
                 String neighborSettlementName = neighborSettlement.getName();

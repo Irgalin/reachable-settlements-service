@@ -1,5 +1,6 @@
 package com.github.irgalin.reachablesettlements.cache;
 
+import com.github.irgalin.reachablesettlements.controller.ReachableSettlementsRequest;
 import com.github.irgalin.reachablesettlements.service.SettlementsService;
 
 import javax.validation.constraints.NotNull;
@@ -13,18 +14,18 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ReachableSettlementsCache {
 
-    private final static Map<ResultCacheKey, Set<String>> resultsCache = new ConcurrentHashMap<>();
+    private final static Map<ReachableSettlementsRequest, Set<String>> resultsCache = new ConcurrentHashMap<>();
 
     @NotNull
-    public static Set<String> getResultFromCache(@NotNull String startingPointName, int commuteTime) {
-        return resultsCache.get(new ResultCacheKey(startingPointName, commuteTime));
+    public static Set<String> getResultFromCache(@NotNull ReachableSettlementsRequest request) {
+        return resultsCache.get(request);
     }
 
-    public static void putResultInCache(@NotNull String startingPointName, int commuteTime, @NotNull Set<String> result) {
-        resultsCache.put(new ResultCacheKey(startingPointName, commuteTime), result);
+    public static void putResultInCache(@NotNull ReachableSettlementsRequest request, @NotNull Set<String> result) {
+        resultsCache.put(request, result);
     }
 
-    public static int size(){
+    public static int size() {
         return resultsCache.size();
     }
 
