@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.github.irgalin</groupId>
     <artifactId>reachable-settlements-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>reachable-settlements-service</name>
     <description>The service that allows users to determine the reachable towns/cities from a starting point in a given
         amount of time.

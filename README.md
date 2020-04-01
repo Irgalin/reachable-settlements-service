@@ -179,11 +179,11 @@ with body that matches to the following JSON-schema:
 ```
 The service returns response (``Content-Type: application/json``) which body contains the list of reachable settlement names.
 
-Request example:
+##### Request example:
 
 ```url -d '{"startingPointName":"Berlin, Germany","commuteTimeMin":60}' -H "Content-Type: application/json" -X POST http://localhost:8080/reachable-settlements```
 
-Response example: 
+##### Response example: 
 
 ```["St. Petersburg, Russia","St. Petersburg, Florida, USA","Minsk, Belarus","New Delhi, India"]```
 
