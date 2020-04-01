@@ -5,7 +5,6 @@ import com.github.irgalin.reachablesettlements.service.SettlementsService;
 
 import javax.validation.constraints.NotNull;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -31,31 +30,5 @@ public class ReachableSettlementsCache {
 
     public static void clearCache() {
         resultsCache.clear();
-    }
-
-    private static class ResultCacheKey {
-
-        private final String startingPointName;
-
-        private final int commuteTime;
-
-        public ResultCacheKey(@NotNull String startingPointName, int commuteTime) {
-            this.startingPointName = startingPointName;
-            this.commuteTime = commuteTime;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            ResultCacheKey that = (ResultCacheKey) o;
-            return commuteTime == that.commuteTime &&
-                    startingPointName.equals(that.startingPointName);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(startingPointName, commuteTime);
-        }
     }
 }
