@@ -104,7 +104,7 @@ file.
 
 The properties can also be specified as run arguments, see [Run application](#run-application) section.
 
-####Required configuration
+### Required configuration
 There is only one required application property to run the service: 
 ``json.data.file`` that must be set to the path of input data JSON file (described 
 in the [Preparing input data](#preparing-input-data) section).
@@ -112,7 +112,7 @@ in the [Preparing input data](#preparing-input-data) section).
 For example: 
 ```json.data.file=/home/rafael/setllements.json```
 
-####Optional configuration
+#### Optional configuration
 
   ``server.port`` - sets the port on which the service is running (default: ``8080``), e.g. ``server.port=8083``.
   
@@ -142,24 +142,46 @@ or using java -jar command:
 
 ```java -jar /target/reachable-settlements-service-0.0.1.jar```
 
-also can be run with arguments:
+run with arguments:
 
 ```java -jar /target/reachable-settlements-service-0.0.1.jar --server.port=8083 --json.data.file=/home/rafael/setllements.json```
 
 ## Service API:
 
-Finding the reachable settlements from starting point in a given amount of time is only operation that can be performed by service. 
-In order to perform this operation, the ``GET`` request must be sent with ``reachable-settlements`` URL-path and the following required parameters must be specified:
+Finding the reachable settlements from starting point in a given amount of time is only operation that can be 
+performed by service. 
+In order to perform this operation, the ``POST`` request must be sent to the ``{host}/reachable-settlements`` URL-path 
+with body that matches to the following JSON-schema:
 
-```startingPointName``` - a settlement name, must be unique and certain, for example: 'Saint Petersburg, Russia', 'Saint Petersburg, Florida, USA'.
+```
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "JSON Schema that defines data format of POST-request bodies that can be sent to '/reachable-settlements'",
+  "type": "object",
+  "properties": {
+    "startingPointName": {
+      "description": "The name of starting point (must match to the existing settlement name).",
+      "type": "string"
+    },
+    "commuteTimeMin": {
+      "description": "Commute time from starting point, in minutes.",
+      "type": "number",
+      "minimum": 1,
+      "maximum": 2147483647
+    }
+  },
+  "commuteTimeMin": [
+    "startingPointName",
+    "time"
+  ]
+}
 
-```commuteTimeMin``` - commute time from the starting point in minutes (min value -``1``, max value - ``2147483647``).
-
-The service must send response (``Content-Type: application/json``) which body contains the list of reachable settlement names.
+```
+The service returns response (``Content-Type: application/json``) which body contains the list of reachable settlement names.
 
 Request example:
 
-```curl -X GET "http://localhost:8080/reachable-settlements?startingPointName=Berlin,%20Germany&commuteTimeMin=9000"```
+```url -d '{"startingPointName":"Berlin, Germany","commuteTimeMin":60}' -H "Content-Type: application/json" -X POST http://localhost:8080/reachable-settlements```
 
 Response example: 
 
