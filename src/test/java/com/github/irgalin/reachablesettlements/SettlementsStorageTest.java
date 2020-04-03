@@ -5,8 +5,6 @@ import com.github.irgalin.reachablesettlements.storage.SettlementsStorage;
 import org.apache.log4j.Appender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -18,22 +16,24 @@ public class SettlementsStorageTest {
 
     private final Appender mockAppender = mock(Appender.class);
 
-    @BeforeEach
-    public void setUp() {
-        SettlementsStorage.clearData();
-    }
-
     @Test
     public void testReadDataFromJsonFileWithCorrectData() {
-        SettlementsStorage.readDataFromJsonFile("classpath:correct-test-data-1.json");
-        assertThat(SettlementsStorage.hasData()).isTrue();
-        assertThat(SettlementsStorage.settlementsCount()).isEqualTo(3);
-        assertThat(SettlementsStorage.getSettlementByName("town3"))
+        SettlementsStorage correctDataStorage1 = new SettlementsStorage("classpath:correct-test-data-1.json");
+        assertThat(correctDataStorage1.hasData()).isTrue();
+        assertThat(correctDataStorage1.settlementsCount()).isEqualTo(3);
+        assertThat(correctDataStorage1.getSettlementByName("town3"))
                 .isNotNull()
                 .isInstanceOf(Settlement.class);
-        assertThat(SettlementsStorage.getSettlementByName("town3").getCommutes())
+        assertThat(correctDataStorage1.getSettlementByName("town3").getCommutes())
                 .isNotNull()
                 .hasSize(2);
+
+        SettlementsStorage correctDataStorage2 = new SettlementsStorage("classpath:correct-test-data-2.json");
+        assertThat(correctDataStorage2.hasData()).isTrue();
+        assertThat(correctDataStorage2.settlementsCount()).isEqualTo(2);
+        assertThat(correctDataStorage2.getSettlementByName("town1"))
+                .isNotNull()
+                .isInstanceOf(Settlement.class);
     }
 
     @Test
@@ -41,11 +41,11 @@ public class SettlementsStorageTest {
         Logger logger = Logger.getLogger(SettlementsStorage.class);
         logger.addAppender(mockAppender);
 
-        SettlementsStorage.readDataFromJsonFile("classpath:wrong-test-data-1.json");
-        assertThat(SettlementsStorage.hasData()).isFalse();
+        SettlementsStorage wrongDataStorage1 = new SettlementsStorage("classpath:wrong-test-data-1.json");
+        assertThat(wrongDataStorage1.hasData()).isFalse();
 
-        SettlementsStorage.readDataFromJsonFile("classpath:wrong-test-data-2.json");
-        assertThat(SettlementsStorage.hasData()).isFalse();
+        SettlementsStorage wrongDataStorage2 = new SettlementsStorage("classpath:wrong-test-data-2.json");
+        assertThat(wrongDataStorage2.hasData()).isFalse();
 
         ArgumentCaptor<LoggingEvent> eventArgumentCaptor = ArgumentCaptor.forClass(LoggingEvent.class);
         verify(mockAppender, times(2)).doAppend(eventArgumentCaptor.capture());
@@ -59,11 +59,6 @@ public class SettlementsStorageTest {
         assertThat(secondLoggingEvent.getLevel()).isEqualTo(ERROR);
         assertThat(secondLoggingEvent.getMessage().toString()
                 .contains("The data in JSON file doesn't match to the defined schema.")).isTrue();
-    }
-
-    @AfterAll
-    public static void cleanUp() {
-        SettlementsStorage.clearData();
     }
 
 }

@@ -5,14 +5,6 @@
       {
         "destPointName": "town2",
         "time": 20
-      },
-      {
-        "destPointName": "town3",
-        "time": 20
-      },
-      {
-        "destPointName": "town4",
-        "time": 30
       }
     ]
   },
@@ -20,16 +12,8 @@
     "name": "town2",
     "commutes": [
       {
-        "destPointName": "town3",
+        "destPointName": "town1",
         "time": 20
-      },
-      {
-        "destPointName": "town4",
-        "time": 20
-      },
-      {
-        "destPointName": "town5",
-        "time": 40
       }
     ]
   }

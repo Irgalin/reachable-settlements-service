@@ -16,27 +16,36 @@ import org.springframework.util.ResourceUtils;
 import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Represents heap-memory storage of {@link Settlement} objects.
  * The {@link Settlement} objects are stored in an efficient data structure.
- * The storage is filled by reading data from a given JSON-file, see {@link #readDataFromJsonFile(String)}.
+ * The storage is filled by reading data from a given JSON-file, see {@link #readDataFromJsonFile()}.
  * The class is thread-safe.
  */
 public class SettlementsStorage {
 
     private static final Logger LOGGER = Logger.getLogger(SettlementsStorage.class);
 
-    private static Map<String, Settlement> nameSettlementMap = new ConcurrentHashMap<>();
+    /**
+     * path to a JSON file with data.
+     */
+    private final String jsonDataFilePath;
+
+    private final Map<String, Settlement> nameSettlementMap;
+
+    public SettlementsStorage(@NotNull String jsonDataFilePath) {
+        this.jsonDataFilePath = jsonDataFilePath;
+        this.nameSettlementMap = new HashMap<>();
+        readDataFromJsonFile();
+    }
 
     /**
      * Reads and validates data from a given JSON-file to the heap-memory data structure.
-     *
-     * @param jsonDataFilePath path to a JSON file with data.
      */
-    public synchronized static void readDataFromJsonFile(@NotNull String jsonDataFilePath) {
+    private void readDataFromJsonFile() {
         try {
             File jsonDataFile = ResourceUtils.getFile(jsonDataFilePath);
             if (jsonDataFile.isFile()) {
@@ -54,7 +63,7 @@ public class SettlementsStorage {
         }
     }
 
-    private static boolean isJsonDataValid(@NotNull JsonNode jsonNode) throws IOException, ProcessingException {
+    private boolean isJsonDataValid(@NotNull JsonNode jsonNode) throws IOException, ProcessingException {
         Resource schemaResource = new ClassPathResource("data-format-schema.json");
         JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
         JsonSchema schema = factory.getJsonSchema(JsonLoader.fromURL(schemaResource.getURL()));
@@ -66,24 +75,18 @@ public class SettlementsStorage {
         return true;
     }
 
-    public static Settlement getSettlementByName(@NotNull String settlementName) {
+    public Settlement getSettlementByName(@NotNull String settlementName) {
         return nameSettlementMap.get(settlementName);
     }
 
     /**
      * @return number of available settlements in storage.
      */
-    public static int settlementsCount() {
+    public int settlementsCount() {
         return nameSettlementMap.size();
     }
 
-    public static boolean hasData() {
+    public boolean hasData() {
         return !nameSettlementMap.isEmpty();
     }
-
-    public static void clearData() {
-        nameSettlementMap.clear();
-    }
-
-
 }

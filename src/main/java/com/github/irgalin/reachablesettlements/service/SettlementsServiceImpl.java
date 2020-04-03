@@ -22,32 +22,32 @@ public class SettlementsServiceImpl implements SettlementsService {
     @Value("${json.data.file}")
     private String jsonDataFile;
 
+    private SettlementsStorage storage;
+
     @PostConstruct
-    public void prepareStorage() {
-        if (!SettlementsStorage.hasData()) {
-            SettlementsStorage.readDataFromJsonFile(jsonDataFile);
-        }
+    public void initiateStorage() {
+        storage = new SettlementsStorage(jsonDataFile);
     }
 
     @Override
     @NotNull
     public Set<String> getReachableSettlements(@NotNull final String startingPointName, final int commuteTimeLimit) {
-        if (SettlementsStorage.getSettlementByName(startingPointName) == null) {
+        if (storage.getSettlementByName(startingPointName) == null) {
             throw new SettlementsServiceException("Unknown settlement name: " + startingPointName);
         }
         return findReachableSettlements(startingPointName, commuteTimeLimit);
     }
 
-    private synchronized Set<String> findReachableSettlements(@NotNull final String startingPointName,
-                                                              final int commuteTimeLimit) {
+    private Set<String> findReachableSettlements(@NotNull final String startingPointName,
+                                                 final int commuteTimeLimit) {
         Set<String> foundSettlementsNames = new LinkedHashSet<>();
         Stack<SettlementWrapper> settlementStack = new Stack<>();
-        settlementStack.push(new SettlementWrapper(SettlementsStorage.getSettlementByName(startingPointName), 0));
+        settlementStack.push(new SettlementWrapper(storage.getSettlementByName(startingPointName), 0));
         while (!settlementStack.empty()) {
             SettlementWrapper currentSettlement = settlementStack.pop();
             int curSettlementCommuteTime = currentSettlement.getCommuteTimeToStartingPoint();
             for (Commute commute : currentSettlement.getSettlement().getCommutes()) {
-                Settlement neighborSettlement = SettlementsStorage.getSettlementByName(commute.getDestPointName());
+                Settlement neighborSettlement = storage.getSettlementByName(commute.getDestPointName());
                 if (neighborSettlement == null) {
                     LOGGER.warn("The following destination point is absent: " + commute.getDestPointName() +
                             ". Please check correctness of input data.");
