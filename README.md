@@ -104,7 +104,7 @@ file.
 
 The properties can also be specified as run arguments, see [Run application](#run-application) section.
 
-### Required configuration
+#### Required configuration
 There is only one required application property to run the service: 
 ``json.data.file`` that must be set to the path of input data JSON file (described 
 in the [Preparing input data](#preparing-input-data) section).
@@ -148,7 +148,7 @@ run with arguments:
 
 ## Service API:
 
-Finding the reachable settlements from starting point in a given amount of time is only operation that can be 
+Finding the reachable settlements from a starting point in a given amount of time is only operation that can be 
 performed by service. 
 In order to perform this operation, the ``POST`` request must be sent to the ``{host}/reachable-settlements`` URL-path 
 with body that matches to the following JSON-schema:
@@ -170,7 +170,7 @@ with body that matches to the following JSON-schema:
       "maximum": 2147483647
     }
   },
-  "commuteTimeMin": [
+  "required": [
     "startingPointName",
     "time"
   ]
@@ -181,7 +181,7 @@ The service returns response (``Content-Type: application/json``) which body con
 
 ##### Request example:
 
-```url -d '{"startingPointName":"Berlin, Germany","commuteTimeMin":60}' -H "Content-Type: application/json" -X POST http://localhost:8080/reachable-settlements```
+```curl -d '{"startingPointName":"Berlin, Germany","commuteTimeMin":60}' -H "Content-Type: application/json" -X POST http://localhost:8080/reachable-settlements```
 
 ##### Response example: 
 
@@ -198,5 +198,4 @@ The input data should be split by geographic regions and be loaded from database
 region is required. The algorithm must be able to join results from different regions.
 - More advanced caching should be implemented with possibility to store data partially on disk and load it into 
 heap memory when its required.
-- The algorithm should support concurrent executions, parallel processing of multiple requests should be implemented.
 - The service should support clustering. 
