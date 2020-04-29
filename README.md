@@ -172,7 +172,7 @@ with body that matches to the following JSON-schema:
   },
   "required": [
     "startingPointName",
-    "time"
+    "commuteTimeMin"
   ]
 }
 
